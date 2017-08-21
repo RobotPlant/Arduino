@@ -19,3 +19,6 @@ Módulo Solo - higômetro:
 
 https://www.filipeflop.com/blog/monitore-sua-planta-usando-arduino/
 
+LDR:
+
+https://arduinobymyself.blogspot.com.br/2012/03/arduino-sensoreamento-de-luz-ldr.html
