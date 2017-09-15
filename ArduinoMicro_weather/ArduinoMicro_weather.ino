@@ -26,16 +26,24 @@ SimpleTimer timer;
 /* Soil Moister */
 #define soilMoisterPin A0
 #define soilMoisterVcc 4
-int soilMoister = 0;
+float soilMoister = 0;
+
+int mostra = 0;
+
+struct Dados {
+  float sHum;
+  float sTemp;
+  float sSoil;
+};
 
 void setup()
 {
   pinMode(soilMoisterVcc, OUTPUT);
   pinMode(soilMoisterPin, INPUT);
   Serial.begin(9600);
-  delay(10);
+  delay(10000);
   dht.begin();
-  timer.setInterval(2000L, getDhtData);
+  timer.setInterval(7000L, getDhtData);
   timer.setInterval(7000L, getSoilMoisterData);
  // timer.setInterval(5000L, sendUptime);
   digitalWrite (soilMoisterVcc, LOW);
@@ -43,7 +51,20 @@ void setup()
 
 void loop()
 {
+
+  Dados dados[1] = {hum, temp, soilMoister };
+  
   timer.run(); // Initiates SimpleTimer
+
+  if(mostra == 1){
+for(int i = 0; i< 1; i++) {
+    Serial.println(dados[i].sHum);
+    Serial.println(dados[i].sTemp);
+    Serial.println(dados[i].sSoil);
+    dados[i] = {0, 0, 0};
+    Serial.println("Dados limpos");
+  }
+}  
 }
 
 /***************************************************
@@ -51,16 +72,31 @@ void loop()
  **************************************************/
 void getDhtData(void)
 {
+  
   float tempIni = temp;
   float humIni = hum;
+
   temp = dht.readTemperature();
-  Serial.print("Temperatura: ");
-  Serial.println(temp);
-  Serial.write(temp);
+
   hum = dht.readHumidity();
-  Serial.print("Humidade do ar: ");
-  Serial.println(hum);
-  Serial.write(hum);
+  
+  if(temp != tempIni || temp == 0) {
+      
+    Serial.print("Temperatura: ");
+    //Serial.print(tempIni);
+    Serial.println(temp);
+    //Serial.write(temp);
+    tempIni = temp;
+  }
+  if(hum != humIni || hum == 0) {
+    
+    Serial.print("Humidade do ar: ");
+    //Serial.print(humIni);
+    Serial.println(hum);
+ // Serial.write(hum);  
+    humIni = hum;
+  }
+  
   if (isnan(hum) || isnan(temp))   // Check if any reads failed and exit early (to try again).
   {
     Serial.println("Failed to read from DHT sensor!");
@@ -75,10 +111,11 @@ void getDhtData(void)
  **************************************************/
 void getSoilMoisterData(void)
 {
-  soilMoister = 0;
+  float soilMoisterInit = soilMoister;
   digitalWrite (soilMoisterVcc, HIGH);
   delay (500);
   int N = 3;
+  
   for(int i = 0; i < N; i++) // read sensor "N" times and get the average
   {
     soilMoister += analogRead(soilMoisterPin);   
@@ -87,10 +124,15 @@ void getSoilMoisterData(void)
   digitalWrite (soilMoisterVcc, LOW);
   soilMoister = soilMoister/N; 
  // Serial.println(soilMoister);
+ 
+ if((soilMoister != soilMoisterInit) || (soilMoister ==0)){
   Serial.print("Humidade solo: ");
   Serial.println(soilMoister);
-  Serial.write(soilMoister);
-  soilMoister = map(soilMoister, 380, 0, 0, 100); 
+//  Serial.write(soilMoister);
+  soilMoister = map(soilMoister, 380, 0, 0, 100);
+  soilMoisterInit = soilMoister;
+ }
+
 }
 
 /***************************************************
