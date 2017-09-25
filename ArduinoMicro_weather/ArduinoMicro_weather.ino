@@ -52,19 +52,21 @@ void setup()
 void loop()
 {
 
-  Dados dados[1] = {hum, temp, soilMoister };
+// Dados dados[1] = {hum, temp, soilMoister };
   
   timer.run(); // Initiates SimpleTimer
 
-  if(mostra == 1){
-for(int i = 0; i< 1; i++) {
+/*  if(mostra == 1){
+    for(int i = 0; i< 1; i++) {
     Serial.println(dados[i].sHum);
     Serial.println(dados[i].sTemp);
     Serial.println(dados[i].sSoil);
+    Serial.write((uint8_t *)&dados, sizeof(dados));
     dados[i] = {0, 0, 0};
-    Serial.println("Dados limpos");
+  //  Serial.println("Dados limpos");
+    }
   }
-}  
+*/  
 }
 
 /***************************************************
@@ -82,24 +84,26 @@ void getDhtData(void)
   
   if(temp != tempIni || temp == 0) {
       
-    Serial.print("Temperatura: ");
+    Serial.println("Temperatura");
     //Serial.print(tempIni);
     Serial.println(temp);
     //Serial.write(temp);
     tempIni = temp;
+    mostra = 1;
   }
   if(hum != humIni || hum == 0) {
     
-    Serial.print("Humidade do ar: ");
+    Serial.println("Humidade do ar");
     //Serial.print(humIni);
     Serial.println(hum);
  // Serial.write(hum);  
     humIni = hum;
+    mostra = 1;
   }
   
   if (isnan(hum) || isnan(temp))   // Check if any reads failed and exit early (to try again).
   {
-    Serial.println("Failed to read from DHT sensor!");
+  //  Serial.println("Failed to read from DHT sensor!");
     temp = tempIni;
     hum = humIni;
     return;
@@ -126,11 +130,12 @@ void getSoilMoisterData(void)
  // Serial.println(soilMoister);
  
  if((soilMoister != soilMoisterInit) || (soilMoister ==0)){
-  Serial.print("Humidade solo: ");
+  Serial.println("Humidade solo");
   Serial.println(soilMoister);
 //  Serial.write(soilMoister);
-  soilMoister = map(soilMoister, 380, 0, 0, 100);
-  soilMoisterInit = soilMoister;
+    mostra = 1;
+    soilMoister = map(soilMoister, 380, 0, 0, 100);
+    soilMoisterInit = soilMoister;
  }
 
 }

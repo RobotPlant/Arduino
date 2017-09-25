@@ -28,10 +28,10 @@ const char* TS_SERVER = "api.thingspeak.com";
 String TS_API_KEY ="RS20RDNMTBV3Y29U";
 
 /* OLED */
-#include <ACROBOTIC_SSD1306.h> // library for OLED: SCL ==> D1; SDA ==> D2
+/*#include <ACROBOTIC_SSD1306.h> // library for OLED: SCL ==> D1; SDA ==> D2
 #include <SPI.h>
 #include <Wire.h>
-
+*/
 /* DHT22*/
 #include "DHT.h"
 #define DHTPIN D3  
@@ -55,7 +55,7 @@ void setup()
   Serial.begin(115200);
   delay(10);
   Blynk.begin(auth, ssid, pass);
-  oledStart();
+//  oledStart();
   dht.begin();
   timer.setInterval(2000L, getDhtData);
   timer.setInterval(7000L, getSoilMoisterData);
@@ -66,7 +66,7 @@ void setup()
 
 void loop()
 {
-  displayData();
+//  displayData();
   timer.run(); // Initiates SimpleTimer
   Blynk.run();
 }
@@ -125,7 +125,7 @@ void sendUptime()
 /***************************************************
  * Start OLED
  **************************************************/
-void oledStart(void)
+/*void oledStart(void)
 {
   Wire.begin();  
   oled.init();                      // Initialze SSD1306 OLED display
@@ -137,11 +137,11 @@ void oledStart(void)
   oled.setTextXY(1,0);              
   oled.putString(String(SW_VERSION));
 }
-
+*/
 /***************************************************
  * Display data at Serial Monitora & OLED Display
  **************************************************/
-void displayData(void)
+/*void displayData(void)
 { 
   oled.setTextXY(3,0);              // Set cursor position, start of line 2
   oled.putString("Temp: " + String(temp) + " oC");
@@ -150,11 +150,11 @@ void displayData(void)
   oled.setTextXY(5,0);              // Set cursor position, start of line 2
   oled.putString("Soil: " + String(soilMoister) + " %");
 }
-
+*/
 /***************************************************
  * Clear OLED Display
  **************************************************/
-void clearOledDisplay()
+/*void clearOledDisplay()
 {
   oled.setFont(font8x8);
   oled.setTextXY(0,0); oled.putString("                ");
@@ -167,7 +167,7 @@ void clearOledDisplay()
   oled.setTextXY(7,0); oled.putString("                ");
   oled.setTextXY(0,0); oled.putString("                ");              
 }
-
+*/
 /***************************************************
  * Sending Data to Thinkspeak Channel
  **************************************************/
